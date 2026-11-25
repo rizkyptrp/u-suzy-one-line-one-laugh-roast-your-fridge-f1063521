@@ -36,7 +36,22 @@ LINE = (
 )
 
 
+def validate(line: str) -> None:
+    """Gate: the roast must be one valid line, 1-200 characters, not blank.
+
+    Raises ValueError with a clear message if the line fails any check.
+    """
+    line.encode("utf-8")  # raises UnicodeEncodeError if not valid text
+    if "\n" in line or "\r" in line:
+        raise ValueError("roast must be exactly one line (no newline inside)")
+    if not 1 <= len(line) <= 200:
+        raise ValueError(f"roast must be 1-200 characters, got {len(line)}")
+    if not line.strip():
+        raise ValueError("roast must not be only whitespace")
+
+
 def main() -> None:
+    validate(LINE)
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(LINE)
